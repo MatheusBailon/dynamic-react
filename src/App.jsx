@@ -1,26 +1,44 @@
 import { useState } from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
-import {Header} from './components/Header'
+//Components
+import {Header} from './components/Header';
 
-import { Client, Databases } from 'appwrite';
+//Pages
+import { Home } from './pages/Home';
+import { Blog } from './pages/Blog';
+//About
+import { AboutUs } from './pages/About/AboutUs';
+import { ContactUs } from './pages/About/ContactUs';
+import { Shipping } from './pages/About/Shipping';
+//Fim About pages
+
+import { Account, Client, Databases, Storage } from 'appwrite';
 
 function App() {
   const client = new Client();
   client
-    .setProject('6746c366001e61e08f2c')
-    .setEndpoint('https://cloud.appwrite.io/v1');
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject('6746c366001e61e08f2c');
     
-  const databse = Databases(client);
+  const database = new Databases(client);
+  const storage = new Storage(client);
+  const account = new Account(client);
 
   
   return (
     <>
-      <Header text="Sweet wine"/>
+      <BrowserRouter>
+      <Header/>
+        <Routes>
+          <Route exact path="/" element={<Home db={database} str={storage}/>}/>
+          <Route path="/about/aboutUs" element={<AboutUs/>}/>
+          <Route path="/about/contactUs" element={<ContactUs/>}/>
+          <Route path="/about/shipping" element={<Shipping/>}/>
+          <Route path="/Blog" element={<Blog/>}/>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
